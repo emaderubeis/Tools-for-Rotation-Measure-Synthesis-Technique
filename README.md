@@ -1,2 +1,4 @@
-# useful_scripts
-Useful scripts for thesis data
+# Useful various scripts
+Useful scripts for thesis data.
+
+
