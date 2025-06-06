@@ -27,8 +27,6 @@ import os
 # Number of channels (once removed the flagged ones, so check the results of the calibration) and dimesion of the cube images
 
 nchan = 56
-ny = 300
-nx = 260
 
 '''
 # Number of flagged channels
@@ -37,13 +35,21 @@ nchan_flag = 8
 
 # paths definition
 
-path_home = '/local/work/e.derubeis/'
-path_q = '/local/work/e.derubeis/PSZ096_Q_64_taper16_TESTARTICOLO/'
-path_u = '/local/work/e.derubeis/PSZ096_U_64_taper16_TESTARTICOLO/'
+path_home = '.'
+path_q = './fits/'
+path_u = './fits/'
 
 # image names (these are the names that comes as WSClean output)
-imagename_q = 'PSZ096_Q_64_taper16-00'
-imagename_u = 'PSZ096_Q_64_taper16-00'
+imagename_q = 'A2255_A_pol_target_rmsynth'
+imagename_u = 'A2255_A_pol_target_rmsynth'
+
+# check the size of the images
+
+hdu = fits.open(path_q+imagename_q+'-0000-I-image.fits')
+data = hdu[0].data[:,:,:,:]
+nx = data.shape[2]
+ny = data.shape[3]
+hdu.close()
 
 cube_q = np.zeros((nchan,ny,nx))
 cube_u = np.zeros((nchan,ny,nx))
@@ -54,20 +60,20 @@ region_name = 'taper10_RMS_2.reg'
 
 
 # name of outputs
-name_cube_u = path_home+'PSZ096_U_64_cube_taper16_TESTARTICOLO_PBCORRECTED.fits'
-name_cube_u_sub= path_home+'PSZ096_U_64_cube_taper16_sub_TESTARTICOLO_PBCORRECTED.fits'
-name_cube_q = path_home+'PSZ096_Q_64_cube_taper16_TESTARTICOLO_PBCORRECTED.fits'
-name_cube_q_sub= path_home+'PSZ096_Q_64_cube_taper16_sub_TESTARTICOLO_PBCORRECTED.fits'
-name_freq_list = path_home+'lista_freq_QU_64_taper10_test_NOPBCORR_PBCORRECTED.txt'
-name_rms_q_list = path_home+'lista_RMS_Q_taper16_TESTARTICOLO_PBCORRECTED.txt'
-name_rms_u_list = path_home+'lista_RMS_U_taper16_TESTARTICOLO_PBCORRECTED.txt'
-name_rms_qu_list = path_home+'lista_RMS_QU_64chans.txt'
+name_cube_u = path_home+'A2255_Aconf_2asec_cubeU.fits'
+#name_cube_u_sub= path_home+'PSZ096_U_64_cube_taper16_sub_TESTARTICOLO_PBCORRECTED.fits'
+name_cube_q = path_home+'A2255_Aconf_2asec_cubeQ.fits'
+#name_cube_q_sub= path_home+'PSZ096_Q_64_cube_taper16_sub_TESTARTICOLO_PBCORRECTED.fits'
+name_freq_list = path_home+'freq_list.txt'
+#name_rms_q_list = path_home+'lista_RMS_Q_taper16_TESTARTICOLO_PBCORRECTED.txt'
+#name_rms_u_list = path_home+'lista_RMS_U_taper16_TESTARTICOLO_PBCORRECTED.txt'
+#name_rms_qu_list = path_home+'lista_RMS_QU_64chans.txt'
 
 # producing the Q and U cubes and writing a list of frequencies corresponding to the ones that characterize the images of the cube
 with open(name_freq_list,'w') as lfr:
 	for i in range(0,nchan):
-		hdu_q = fits.open(path_q+imagename_q+str("{:02d}".format(i))+'-image.fits')
-		hdu_u = fits.open(path_u+imagename_u+str("{:02d}".format(i))+'-image.fits')
+		hdu_q = fits.open(path_q+imagename_q+str("-{:04d}".format(i))+'-Q-image.fits')
+		hdu_u = fits.open(path_u+imagename_u+str("-{:04d}".format(i))+'-U-image.fits')
 		data_q = hdu_q[0].data[:,:]
 		data_u = hdu_u[0].data[:,:]
 		header_q = hdu_q[0].header
@@ -164,7 +170,7 @@ print("Empty channels removed from the U cube!")
 '''
 
 
-
+'''
 # Here we select a region for which a "sub-cube" is obtained and write the RMS for each image of the cube 
 # for both Q and U into a text file
 
@@ -261,3 +267,4 @@ stdev_QU = statistics.stdev(lista_QU)
 
 print('Average RMS between Q and U % s ' %(media_QU))
 print('Standard deviation between RMS of Q and U % s ' %(stdev_QU))
+'''
